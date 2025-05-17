@@ -14,6 +14,8 @@ class PageController extends Controller
 {
     public function index()
     {
+        $userId = auth()->id();
+
         $stats = [
             'users' => User::count(),
             'tracks' => Track::count(),
@@ -22,9 +24,21 @@ class PageController extends Controller
         ];
 
         $recentTracks = Track::where('is_public', true)
+            ->with(['likes' => function ($query) {
+                $query->where('user_id', auth()->id());
+            }])
             ->latest()
             ->take(6)
             ->get(['id', 'title', 'artist', 'file_path']);
+
+        $recentTracks->transform(function ($track) {
+            // Проверяем, есть ли лайк текущего пользователя
+            $track->isLiked = $track->likes->count() > 0;
+            unset($track->likes);
+            return $track;
+        });
+
+
 
         return Inertia::render('Index', [
             'stats' => $stats,
@@ -32,11 +46,13 @@ class PageController extends Controller
         ]);
     }
 
+
+
     public function dashboard()
     {
         $user = auth()->user()->load('tracks', 'playlists');
 
-        return Inertia::render('Dashboard', [
+        return Inertia::render('Dashboard/Dashboard', [
             'stats' => [
                 'tracks' => $user->tracks()->count(),
                 'playlists' => $user->playlists()->count(),

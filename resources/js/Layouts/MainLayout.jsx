@@ -14,8 +14,8 @@ export default function MainLayout({ children }) {
                         <Link href="/" className="hover:text-blue-600">Главная</Link>
                         {auth.user && (
                             <>
-                                <Link href="/tracks" className="hover:text-blue-600">Мои треки</Link>
-                                <Link href="/playlists" className="hover:text-blue-600">Плейлисты</Link>
+                                <Link href="/my-tracks" className="hover:text-blue-600">Мои треки</Link>
+                                <Link href="/my-playlists" className="hover:text-blue-600">Плейлисты</Link>
                                 <Link href="/profile" className="hover:text-blue-600">Профиль</Link>
                             </>
                         )}

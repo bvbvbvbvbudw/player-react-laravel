@@ -1,6 +1,7 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
 import MainLayout from "@/Layouts/MainLayout.jsx";
+import AudioPlayer from "@/Components/AudioPlayer.jsx";
 
 export default function Home({ stats, recentTracks }) {
     return (
@@ -42,14 +43,16 @@ export default function Home({ stats, recentTracks }) {
                         <h2 className="text-2xl font-semibold mb-4">🆕 Новые треки</h2>
                         <div className="grid md:grid-cols-2 gap-4">
                             {recentTracks.length > 0 ? (
-                                recentTracks.map(track => (
-                                    <div key={track.id} className="p-4 bg-white rounded shadow">
-                                        <h3 className="text-lg font-semibold">{track.title} - {track.artist}</h3>
-                                        <audio controls className="mt-2 w-full">
-                                            <source src={`/storage/tracks/${track.file_path}`} type="audio/mpeg" />
-                                            Ваш браузер не поддерживает аудио.
-                                        </audio>
-                                    </div>
+                                recentTracks.map((track) => (
+                                    <AudioPlayer
+                                        key={track.id}
+                                        src={`/storage/${track.file_path}`}
+                                        title={track.title}
+                                        artist={track.artist}
+                                        trackId={track.id}
+                                        initialLikes={track.likes}
+                                        initialLiked={track.isLiked}
+                                    />
                                 ))
                             ) : (
                                 <p className="text-gray-600">Нет новых треков.</p>
