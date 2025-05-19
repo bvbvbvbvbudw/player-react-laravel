@@ -3,6 +3,7 @@
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TrackController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +13,9 @@ Route::get("/", [PageController::class, "index"])->name("home");
 
 
 // ROUTE FOR CREATOR/USER
+Route::get('/search', [SearchController::class, 'search']);
+Route::get('/search-results', [SearchController::class, 'index'])->name('search.results');
+
 Route::get("/dashboard", [PageController::class, "dashboard"])->name("dashboard");
 Route::post('/tracks/{track}/toggle-like', [TrackController::class, 'toggleLike']);
 Route::post('/playlists/{playlist}/toggle-like', [PlaylistController::class, 'toggleLike']);
