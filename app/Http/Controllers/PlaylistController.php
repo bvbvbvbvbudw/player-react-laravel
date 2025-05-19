@@ -22,16 +22,19 @@ class PlaylistController extends Controller
 
     public function show($id)
     {
+        $user = auth()->user();
         $playlist = Playlist::findOrFail($id);
         $playlist->load('tracks');
+        $isCreator = $user->id === $playlist->user_id;
 
         $allTracks = Track::where('user_id', auth()->id())
             ->whereNotIn('id', $playlist->tracks->pluck('id'))
-            ->get(['id', 'title', 'artist']);
+            ->get(['id', 'title', 'artist', "plays"]);
 
         return Inertia::render('Playlists/Show', [
             'playlist' => $playlist,
             'allTracks' => $allTracks,
+            'isCreator' => $isCreator,
         ]);
     }
 
@@ -66,5 +69,25 @@ class PlaylistController extends Controller
         }
 
         return redirect()->back()->with('success', 'Трек добавлен в плейлист');
+    }
+
+    public function toggleLike(Request $request, Playlist $playlist)
+    {
+        $user = $request->user();
+
+        $existingLike = $playlist->likes()->where('user_id', $user->id)->first();
+
+        if ($existingLike) {
+            $existingLike->delete();
+            $liked = false;
+        } else {
+            $playlist->likes()->create(['user_id' => $user->id]);
+            $liked = true;
+        }
+
+        return response()->json([
+            'liked' => $liked,
+            'likesCount' => $playlist->likes()->count(),
+        ]);
     }
 }

@@ -107,7 +107,7 @@ export default function Dashboard({ stats = {}, tracks = [], playlists = [] }) {
                                         </div>
                                         <div className="space-x-2">
                                             <Link
-                                                href={`/my-playlists/${pl.id}`}
+                                                href={`/playlist/${pl.id}`}
                                                 className="text-blue-600 hover:underline"
                                             >
                                                 Открыть

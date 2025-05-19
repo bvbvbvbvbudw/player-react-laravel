@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function AudioPlayer({ src, title, artist, trackId, initialLikes, initialLiked }) {
+export default function AudioPlayer({ src, title, artist, trackId, initialLikes, initialLiked, plays }) {
     const audioRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
@@ -101,6 +101,10 @@ export default function AudioPlayer({ src, title, artist, trackId, initialLikes,
             >
                 ❤️ {likes}
             </button>
+
+            <p>
+                {plays}
+            </p>
 
             <audio
                 ref={audioRef}

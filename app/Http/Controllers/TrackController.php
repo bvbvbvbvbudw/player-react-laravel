@@ -61,12 +61,10 @@ class TrackController extends Controller
         $existingLike = $track->likes()->where('user_id', $user->id)->first();
 
         if ($existingLike) {
-            // Удаляем лайк
             $existingLike->delete();
             $track->decrement('likes');
             $liked = false;
         } else {
-            // Добавляем лайк
             $track->likes()->create(['user_id' => $user->id]);
             $track->increment('likes');
             $liked = true;

@@ -2,8 +2,9 @@ import React from 'react';
 import { Head } from '@inertiajs/react';
 import MainLayout from "@/Layouts/MainLayout.jsx";
 import AudioPlayer from "@/Components/AudioPlayer.jsx";
+import AudioPlaylist from "@/Components/AudioPlaylist.jsx";
 
-export default function Home({ stats, recentTracks }) {
+export default function Home({ stats, recentTracks, recentPlaylists }) {
     return (
         <>
             <MainLayout>
@@ -52,10 +53,31 @@ export default function Home({ stats, recentTracks }) {
                                         trackId={track.id}
                                         initialLikes={track.likes}
                                         initialLiked={track.isLiked}
+                                        plays={track.plays}
                                     />
                                 ))
                             ) : (
                                 <p className="text-gray-600">Нет новых треков.</p>
+                            )}
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2 className="text-2xl font-semibold mb-4">🆕 Новые плейлисты</h2>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            {recentPlaylists.length > 0 ? (
+                                recentPlaylists.map((playlist) => (
+                                    <AudioPlaylist
+                                        key={playlist.id}
+                                        playlistId={playlist.id}
+                                        title={playlist.name}
+                                        user={playlist.user}
+                                        initialLikes={playlist.likes}
+                                        initialLiked={playlist.isLiked}
+                                    />
+                                ))
+                            ) : (
+                                <p>Нет плейлистов</p>
                             )}
                         </div>
                     </section>

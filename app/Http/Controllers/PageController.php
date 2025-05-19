@@ -29,20 +29,25 @@ class PageController extends Controller
             }])
             ->latest()
             ->take(6)
-            ->get(['id', 'title', 'artist', 'file_path']);
+            ->get(['id', 'title', 'artist', 'file_path', "plays"]);
 
         $recentTracks->transform(function ($track) {
-            // Проверяем, есть ли лайк текущего пользователя
             $track->isLiked = $track->likes->count() > 0;
             unset($track->likes);
             return $track;
         });
 
-
+        // $recentPlaylists = Playlist::where('is_public', true)->get();
+        $recentPlaylists = Playlist::with("user", "tracks")->get();
+        foreach ($recentPlaylists as $playlist) {
+            // $playlist->isLiked = $playlist->likes->count() > 0;
+            $playlist->isLiked = 0;
+        }
 
         return Inertia::render('Index', [
             'stats' => $stats,
             'recentTracks' => $recentTracks,
+            'recentPlaylists' => $recentPlaylists,
         ]);
     }
 

@@ -25,7 +25,7 @@ export default function MyPlaylists({ playlists }) {
                             {playlists.map((playlist) => (
                                 <Link
                                     key={playlist.id}
-                                    href={`/my-playlists/${playlist.id}`}
+                                    href={`/playlist/${playlist.id}`}
                                     className="block p-4 bg-white shadow rounded hover:bg-gray-50 transition"
                                 >
                                     <h2 className="text-xl font-semibold">{playlist.name}</h2>
