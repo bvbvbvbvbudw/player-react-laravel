@@ -24,8 +24,17 @@ class PlaylistController extends Controller
     {
         $user = auth()->user();
         $playlist = Playlist::findOrFail($id);
-        $playlist->load('tracks');
-        $isCreator = $user->id === $playlist->user_id;
+        $playlist->load(['tracks', 'likes']);
+        $playlist->likes_count = $playlist->likes()->count();
+        $playlist->isLiked = auth()->check() ? $playlist->likes()->where('user_id', auth()->id())->exists() : false;
+
+        foreach ($playlist->tracks as $track) {
+            $track->isLiked = auth()->check() ? $track->likes()->where('user_id', auth()->id())->exists() : false;
+        }
+
+        if($user) {
+            $isCreator = $user->id === $playlist->user_id;
+        } else $isCreator = false;
 
         $allTracks = Track::where('user_id', auth()->id())
             ->whereNotIn('id', $playlist->tracks->pluck('id'))
@@ -76,7 +85,6 @@ class PlaylistController extends Controller
         $user = $request->user();
 
         $existingLike = $playlist->likes()->where('user_id', $user->id)->first();
-
         if ($existingLike) {
             $existingLike->delete();
             $liked = false;
@@ -85,9 +93,12 @@ class PlaylistController extends Controller
             $liked = true;
         }
 
-        return response()->json([
+        $likesCount = $playlist->likes()->count();
+        // TODO: переделать под json ответы
+        return back()->with([
             'liked' => $liked,
-            'likesCount' => $playlist->likes()->count(),
+            'likesCount' => $likesCount,
         ]);
     }
+
 }

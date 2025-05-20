@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import axios from 'axios';
+import {router} from "@inertiajs/react";
 
 export default function AudioPlaylist({title, user, initialLikes, initialLiked, playlistId}) {
     const [likes, setLikes] = useState(initialLikes || 0);
@@ -7,9 +7,14 @@ export default function AudioPlaylist({title, user, initialLikes, initialLiked, 
 
     const toggleLike = async () => {
         try {
-            const response = await axios.post(`playlists/${playlistId}/toggle-like`);
-            setLikes(response.data.likes);
-            setLiked(response.data.liked);
+            router.post(`/playlists/${playlistId}/toggle-like`, {}, {
+                preserveScroll: true,
+                onSuccess: (page) => {
+                    console.log(page)
+                    setLikes(page.props.playlist.likes_count);
+                    setLiked(page.props.playlist.isLiked);
+                },
+            });
         } catch (error) {
             console.error('Error toggling like', error);
         }

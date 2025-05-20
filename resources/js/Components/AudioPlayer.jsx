@@ -1,7 +1,7 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import axios from 'axios';
 
-export default function AudioPlayer({ src, title, artist, trackId, initialLikes, initialLiked, plays }) {
+export default function AudioPlayer({ src, title, artist, trackId, initialLikes, initialLiked, initialPlays }) {
     const audioRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
@@ -9,6 +9,7 @@ export default function AudioPlayer({ src, title, artist, trackId, initialLikes,
     const [currentTime, setCurrentTime] = useState(0);
     const [likes, setLikes] = useState(initialLikes || 0);
     const [liked, setLiked] = useState(initialLiked || false);
+    const [plays, setPlays] = useState(initialPlays || 0)
     const [playedOnce, setPlayedOnce] = useState(false);
 
     const togglePlay = () => {
@@ -27,7 +28,8 @@ export default function AudioPlayer({ src, title, artist, trackId, initialLikes,
 
     const incrementPlays = async () => {
         try {
-            await axios.post(`/tracks/${trackId}/increment-plays`);
+            const response = await axios.post(`/tracks/${trackId}/increment-plays`);
+            setPlays(response.data.plays)
         } catch (error) {
             console.error('Error incrementing plays', error);
         }
@@ -36,7 +38,7 @@ export default function AudioPlayer({ src, title, artist, trackId, initialLikes,
     const toggleLike = async () => {
         try {
             const response = await axios.post(`/tracks/${trackId}/toggle-like`);
-            setLikes(response.data.likes);
+            setLikes(response.data.likesCount);
             setLiked(response.data.liked);
         } catch (error) {
             console.error('Error toggling like', error);
@@ -67,44 +69,55 @@ export default function AudioPlayer({ src, title, artist, trackId, initialLikes,
     };
 
     return (
-        <div className="w-full max-w-xl bg-gray-100 rounded-xl shadow-md p-4">
-            <div className="flex items-center justify-between mb-2">
+        <div className="w-full max-w-xl bg-white rounded-2xl shadow-lg p-6 space-y-4">
+            <div className="flex items-center justify-between">
                 <div>
-                    <div className="font-semibold">{title}</div>
-                    <div className="text-sm text-gray-600">{artist}</div>
+                    <h3 className="text-lg font-bold text-gray-800">{title}</h3>
+                    <p className="text-sm text-gray-500">{artist}</p>
                 </div>
                 <button
                     onClick={togglePlay}
-                    className="text-white bg-blue-500 hover:bg-blue-600 rounded-full w-10 h-10 flex items-center justify-center"
+                    className="text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-full w-11 h-11 flex items-center justify-center shadow"
                 >
                     {isPlaying ? '❚❚' : '▶'}
                 </button>
             </div>
 
+            {/* Progress Bar */}
             <div
-                className="w-full h-2 bg-gray-300 rounded cursor-pointer mb-1"
+                className="w-full h-2 bg-gray-200 rounded-full cursor-pointer"
                 onClick={handleProgressClick}
             >
-                <div className="h-2 bg-blue-500 rounded" style={{ width: `${progress}%` }}></div>
+                <div
+                    className="h-2 bg-blue-500 rounded-full transition-all duration-200"
+                    style={{ width: `${progress}%` }}
+                />
             </div>
 
-            <div className="text-xs text-gray-500 flex justify-between mb-2">
+            {/* Time Info */}
+            <div className="text-xs text-gray-400 flex justify-between">
                 <span>{formatTime(currentTime)}</span>
                 <span>{formatTime(duration)}</span>
             </div>
 
-            <button
-                onClick={toggleLike}
-                className={`px-3 py-1 rounded ${
-                    liked ? 'bg-red-500 text-white' : 'bg-gray-300 text-gray-700'
-                }`}
-            >
-                ❤️ {likes}
-            </button>
+            {/* Likes and Plays */}
+            <div className="flex items-center justify-between">
+                <button
+                    onClick={toggleLike}
+                    className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                        liked ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                >
+                    ❤️ {likes}
+                </button>
 
-            <p>
-                {plays}
-            </p>
+                <div className="text-sm text-gray-500 flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-2v13" />
+                    </svg>
+                    <span>{plays} plays</span>
+                </div>
+            </div>
 
             <audio
                 ref={audioRef}
@@ -114,5 +127,6 @@ export default function AudioPlayer({ src, title, artist, trackId, initialLikes,
                 onEnded={() => setIsPlaying(false)}
             />
         </div>
+
     );
 }

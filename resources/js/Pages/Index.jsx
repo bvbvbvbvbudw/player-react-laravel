@@ -51,9 +51,9 @@ export default function Home({ stats, recentTracks, recentPlaylists }) {
                                         title={track.title}
                                         artist={track.artist}
                                         trackId={track.id}
-                                        initialLikes={track.likes}
+                                        initialLikes={track.likesCount}
                                         initialLiked={track.isLiked}
-                                        plays={track.plays}
+                                        initialPlays={track.plays}
                                     />
                                 ))
                             ) : (

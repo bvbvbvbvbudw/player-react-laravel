@@ -6,8 +6,6 @@ use App\Models\Like;
 use App\Models\Playlist;
 use App\Models\Track;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class PageController extends Controller
@@ -23,24 +21,19 @@ class PageController extends Controller
             'likes' => Like::count(),
         ];
 
-        $recentTracks = Track::where('is_public', true)
-            ->with(['likes' => function ($query) {
-                $query->where('user_id', auth()->id());
-            }])
+        $recentTracks = Track::with('likes')->where('is_public', true)
             ->latest()
             ->take(6)
-            ->get(['id', 'title', 'artist', 'file_path', "plays"]);
+            ->get(['id', 'title', 'artist', 'file_path', 'plays']);
 
-        $recentTracks->transform(function ($track) {
-            $track->isLiked = $track->likes->count() > 0;
+        foreach ($recentTracks as $track) {
+            $track->likesCount = $track->likes->count();
+            $track->isLiked = $userId ? $track->likes->contains('user_id', $userId) : false;
             unset($track->likes);
-            return $track;
-        });
+        }
 
-        // $recentPlaylists = Playlist::where('is_public', true)->get();
         $recentPlaylists = Playlist::with("user", "tracks")->get();
         foreach ($recentPlaylists as $playlist) {
-            // $playlist->isLiked = $playlist->likes->count() > 0;
             $playlist->isLiked = 0;
         }
 
@@ -50,7 +43,6 @@ class PageController extends Controller
             'recentPlaylists' => $recentPlaylists,
         ]);
     }
-
 
 
     public function dashboard()

@@ -8,7 +8,6 @@ export default function MainLayout({ children }) {
     const [showDropdown, setShowDropdown] = useState(false);
     const inputRef = useRef();
 
-    // Функция для запроса результатов (например, GET /search?q=...)
     const fetchResults = async (q) => {
         if (!q) {
             setResults({ tracks: [], playlists: [], users: [] });
@@ -29,7 +28,6 @@ export default function MainLayout({ children }) {
         }
     };
 
-    // Делаем запрос при изменении query с небольшой задержкой (debounce)
     useEffect(() => {
         const handler = setTimeout(() => {
             fetchResults(query);
@@ -38,7 +36,6 @@ export default function MainLayout({ children }) {
         return () => clearTimeout(handler);
     }, [query]);
 
-    // Обработка отправки формы (Enter или кнопка)
     const onSubmit = (e) => {
         e.preventDefault();
         setShowDropdown(false);
@@ -59,7 +56,6 @@ export default function MainLayout({ children }) {
 
     return (
         <div className="flex flex-col min-h-screen bg-gray-50 text-gray-800">
-            {/* Header */}
             <header className="bg-white shadow">
                 <div className="container mx-auto px-4 py-4 flex justify-between items-center">
                     <Link href="/" className="text-2xl font-bold text-blue-600">🎧 Musicify</Link>
