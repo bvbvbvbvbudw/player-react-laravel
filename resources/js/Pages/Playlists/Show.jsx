@@ -18,14 +18,14 @@ export default function Show({ playlist, allTracks, isCreator }) {
         });
     };
 
-    const handleToggleLike = () => {
-        router.post(`/playlists/${playlist.id}/toggle-like`, {}, {
-            preserveScroll: true,
-            onSuccess: (page) => {
-                setLiked(page.props.playlist.isLiked);
-                setLikesCount(page.props.playlist.likes_count);
-            },
-        });
+    const handleToggleLike = async () => {
+        try {
+            const response = await axios.post(`/playlists/${playlist.id}/toggle-like`);
+            setLiked(response.data.liked);
+            setLikesCount(response.data.likesCount);
+        } catch (error) {
+            console.error('Error toggling like', error);
+        }
     };
 
     return (

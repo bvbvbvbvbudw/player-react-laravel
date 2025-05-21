@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminPageController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\ProfileController;
@@ -33,6 +34,11 @@ Route::get('/playlists/create', [PlaylistController::class, 'create'])->name('pl
 Route::post('/playlists', [PlaylistController::class, 'store'])->name('playlists.store');
 Route::post('/playlists/{playlist}/add-track', [PlaylistController::class, 'addTrack'])->name('playlists.addTrack');
 // END ROUTE FOR CREATOR/USER
+
+// ROUTES ADMIN
+Route::get("/admin", [AdminPageController::class, "index"])->name("admin.index");
+Route::get("/admin/genre", [AdminPageController::class, "genre"])->name("admin.genre");
+// END ROUTES ADMIN
 
 
 Route::middleware('auth')->group(function () {

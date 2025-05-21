@@ -83,22 +83,21 @@ class PlaylistController extends Controller
     public function toggleLike(Request $request, Playlist $playlist)
     {
         $user = $request->user();
-
-        $existingLike = $playlist->likes()->where('user_id', $user->id)->first();
-        if ($existingLike) {
-            $existingLike->delete();
-            $liked = false;
-        } else {
-            $playlist->likes()->create(['user_id' => $user->id]);
-            $liked = true;
+        if (!$user) {
+            return response()->json([
+                "liked" => false,
+                "likesCount" => $playlist->likes()->count()
+            ]);
         }
 
-        $likesCount = $playlist->likes()->count();
-        // TODO: переделать под json ответы
-        return back()->with([
-            'liked' => $liked,
-            'likesCount' => $likesCount,
+        $likeQuery = $playlist->likes()->where('user_id', $user->id);
+        $liked = !$likeQuery->exists();
+
+        $liked ? $playlist->likes()->create(['user_id' => $user->id]) : $likeQuery->delete();
+
+        return response()->json([
+            "liked" => $liked,
+            "likesCount" => $playlist->likes()->count(),
         ]);
     }
-
 }

@@ -72,7 +72,7 @@ export default function Home({ stats, recentTracks, recentPlaylists }) {
                                         playlistId={playlist.id}
                                         title={playlist.name}
                                         user={playlist.user}
-                                        initialLikes={playlist.likes}
+                                        initialLikes={playlist.likesCount}
                                         initialLiked={playlist.isLiked}
                                     />
                                 ))

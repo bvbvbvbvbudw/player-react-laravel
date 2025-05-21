@@ -34,7 +34,9 @@ class PageController extends Controller
 
         $recentPlaylists = Playlist::with("user", "tracks")->get();
         foreach ($recentPlaylists as $playlist) {
-            $playlist->isLiked = 0;
+            $playlist->isLiked = auth()->user() ? $playlist->likes->contains('user_id', $userId) : false;
+            $playlist->likesCount = $playlist->likes->count();
+            unset($playlist->likes);
         }
 
         return Inertia::render('Index', [
