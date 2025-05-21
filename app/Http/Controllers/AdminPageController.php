@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessPlaylistDownload;
 use App\Models\Genre;
 use App\Models\Track;
 use Illuminate\Http\Request;
@@ -57,6 +58,7 @@ class AdminPageController extends Controller
         }
 
         $outputRaw = $process->getOutput();
+        Log::info($process->getOutput());
 
         $lines = explode("\n", trim($outputRaw));
         $lastLine = trim(end($lines));
@@ -75,15 +77,8 @@ class AdminPageController extends Controller
                 'likes' => 0,
             ]);
         } elseif ($type === 'playlist') {
-            foreach ($output['tracks'] as $track) {
-//                Track::create([
-//                    'title' => $track['title'],
-//                    'artist' => $track['artist'],
-//                    'file_path' => $track['path'],
-//                ]);
-                // TODO: make create track, and playlist, add queue
-                Log::info($track);
-            }
+            // TODO: добавить инпут колво треков которые парсить в плейлист
+            ProcessPlaylistDownload::dispatch($output['tracks'], $output['title'] ?? "Unknown", auth()->id() ?? null);
         }
         return redirect()->route('admin.download.index')->with('success', 'Музыка скачана');
     }

@@ -15,6 +15,7 @@ def save_track(service, title, artist=None):
     url = service.search_track(title, artist)
     if url:
         file_name = f"{artist} - {title}.mp3" if artist else f"{title}.mp3"
+        #print("Saving: ", file_name)
         path = os.path.join("storage", "app", "public", "tracks", file_name)
         service.download_track(url, path)
         return {
@@ -49,9 +50,10 @@ def main():
     artist = sys.argv[4] if len(sys.argv) > 4 else None
 
     # service_name = "soundcloud"
-    # mode = "track"
-    # title = "Hades"
-    # artist = "Ghostmane"
+    # mode = "playlist"
+    # # title = "кишлак/апфс все песни + новые"
+    # title = "phonk"
+    # artist = None
 
     try:
         service = get_service_by_name(service_name)

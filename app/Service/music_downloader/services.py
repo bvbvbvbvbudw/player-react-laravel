@@ -64,18 +64,22 @@ class SoundCloudService(MusicService):
 
     def search_playlist(self, name: str) -> Optional[Playlist]:
         print(f"[SoundCloudService] Ищем плейлист: {name}")
-        search_url = f"scsearch5:{name}"
+        search_url = f"scsearch10:{name}"
 
         with yt_dlp.YoutubeDL(self.ydl_opts) as ydl:
             try:
                 result = ydl.extract_info(search_url, download=False)
+                print("Result: ", result)
                 if 'entries' in result and len(result['entries']) > 0:
-                    # Возьмём первый плейлист в результатах
                     playlist_info = None
-                    for entry in result['entries']:
-                        if entry.get('extractor_key') == 'SoundcloudPlaylist':
-                            playlist_info = entry
-                            break
+                    # for entry in result['entries']:
+                    #     if entry.get('_type') == 'playlist':
+                    #         print("Нашелся")
+                    #         playlist_info = entry
+                    #         break
+                    if result.get('_type') == 'playlist':
+                        print("Нашелся плейлист")
+                        playlist_info = result
                     if not playlist_info:
                         print("[SoundCloudService] Плейлист не найден")
                         return None
