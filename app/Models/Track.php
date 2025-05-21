@@ -9,7 +9,7 @@ class Track extends Model
     protected $fillable = [
         "title",
         "artist",
-        "genre",
+        "genre_id",
         "file_path",
         "user_id",
         "is_public",

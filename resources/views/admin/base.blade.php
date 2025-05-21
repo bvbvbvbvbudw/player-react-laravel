@@ -19,7 +19,7 @@
             <li><a href="{{ route('admin.index') }}" class="block py-2 px-3 rounded hover:bg-green-100 font-semibold @if(request()->routeIs('admin.index')) bg-green-200 @endif">Треки</a></li>
             <li><a href="{{ route('admin.index') }}" class="block py-2 px-3 rounded hover:bg-green-100 font-semibold @if(request()->routeIs('admin.index')) bg-green-200 @endif">Плейлисты</a></li>
             <li><a href="{{ route('admin.index') }}" class="block py-2 px-3 rounded hover:bg-green-100 font-semibold @if(request()->routeIs('admin.index')) bg-green-200 @endif">Пользователи</a></li>
-            <li><a href="{{ route('admin.index') }}" class="block py-2 px-3 rounded hover:bg-green-100 font-semibold @if(request()->routeIs('admin.index')) bg-green-200 @endif">Подключить с других сервисов</a></li>
+            <li><a href="{{ route('admin.download.index') }}" class="block py-2 px-3 rounded hover:bg-green-100 font-semibold @if(request()->routeIs('admin.download.index')) bg-green-200 @endif">Подключить с других сервисов</a></li>
         </ul>
     </nav>
     <div class="p-6 border-t">

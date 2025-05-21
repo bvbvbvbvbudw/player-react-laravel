@@ -39,6 +39,8 @@ Route::post('/playlists/{playlist}/add-track', [PlaylistController::class, 'addT
 // ROUTES ADMIN
 Route::get("/admin", [AdminPageController::class, "index"])->name("admin.index");
 Route::get("/admin/genre", [AdminPageController::class, "genre"])->name("admin.genre");
+Route::get("/admin/download", [AdminPageController::class, "download"])->name("admin.download.index");
+Route::post("/admin/download/python", [AdminPageController::class, "python"])->name("admin.download.python");
 Route::get("/admin/genre/create", [GenreController::class, "create"])->name("admin.genre.create");
 Route::post("/admin/genre/create/store", [GenreController::class, "store"])->name("admin.genre.store");
 // END ROUTES ADMIN
