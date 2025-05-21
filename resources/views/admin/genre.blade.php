@@ -28,39 +28,28 @@
                 Фильтровать
             </button>
 
-            <a href="{{ route("admin.genre") }}" class="bg-black text-white px-5 py-2 rounded font-semibold hover:bg-gray-800 transition">Создать</a>
+            <a href="{{ route("admin.genre.create") }}" class="bg-black text-white px-5 py-2 rounded font-semibold hover:bg-gray-800 transition">Создать</a>
             <a href="{{ route('admin.genre') }}" class="ml-4 underline text-gray-600 hover:text-gray-900">Сбросить</a>
         </form>
 
-        @if($test)
+        @if($genres)
             <table class="w-full border-collapse border border-gray-300">
                 <thead>
                 <tr class="bg-gray-100">
                     <th class="border border-gray-300 px-4 py-2 text-left">ID</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left">Пользователь</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left">План</th>
-                    <th class="border border-gray-300 px-4 py-2 text-right">Сумма</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left">Валюта</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left">Дата создания</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left">Статус</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Имя</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Действия</th>
                 </tr>
                 </thead>
                 <tbody>
-{{--                @foreach($deposits as $deposit)--}}
-{{--                    <tr class="hover:bg-gray-50">--}}
-{{--                        <td class="border border-gray-300 px-4 py-2">{{ $deposit->id }}</td>--}}
-{{--                        <td class="border border-gray-300 px-4 py-2">--}}
-{{--                            {{ $deposit->user->name ?? 'Пользователь не найден' }} (ID: {{ $deposit->user_id }})--}}
-{{--                        </td>--}}
-{{--                        <td class="border border-gray-300 px-4 py-2">--}}
-{{--                            {{ $plans[$deposit->plan_type]['name'] ?? $deposit->plan_type }}--}}
-{{--                        </td>--}}
-{{--                        <td class="border border-gray-300 px-4 py-2 text-right">{{ number_format($deposit->amount, 2) }}</td>--}}
-{{--                        <td class="border border-gray-300 px-4 py-2">{{ $deposit->currency }}</td>--}}
-{{--                        <td class="border border-gray-300 px-4 py-2">{{ $deposit->created_at->format('d.m.Y H:i') }}</td>--}}
-{{--                        <td class="border border-gray-300 px-4 py-2">{{ $deposit->is_active == 1 ? "Активно" : "Неактивно" }}</td>--}}
-{{--                    </tr>--}}
-{{--                @endforeach--}}
+                @foreach($genres as $genre)
+                    <tr class="hover:bg-gray-50">
+                        <td class="border border-gray-300 px-4 py-2">{{ $genre->id }}</td>
+
+                        <td class="border border-gray-300 px-4 py-2">{{ $genre->name }}</td>
+                        <td class="border border-gray-300 px-4 py-2">изменить удалить</td>
+                    </tr>
+                @endforeach
                 </tbody>
             </table>
 

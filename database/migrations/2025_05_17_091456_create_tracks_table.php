@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('artist');
-            $table->string('genre')->nullable();
+            $table->foreignId('genre_id')
+                ->nullable()
+                ->constrained('genres')
+                ->onDelete('set null');
             $table->string('file_path');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->boolean('is_public')->default(true);

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Genre;
 use App\Models\Track;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +20,10 @@ class TrackController extends Controller
 
     public function create()
     {
-        return Inertia::render('Dashboard/Upload');
+        $genres = Genre::all();
+        return Inertia::render('Dashboard/Upload', [
+            'genres' => $genres,
+        ]);
     }
 
     public function store(Request $request)
@@ -27,17 +31,17 @@ class TrackController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'artist' => 'required|string|max:255',
-            'genre' => 'nullable|string|max:100',
+            'genre_id' => 'required|exists:genres,id',
             'audio' => 'required|file|mimes:mp3,wav,ogg|max:20480',
             'is_public' => 'boolean',
         ]);
 
         $path = $request->file('audio')->store('tracks', 'public');
 
-        $track = \App\Models\Track::create([
+        Track::create([
             'title' => $request->title,
             'artist' => $request->artist,
-            'genre' => $request->genre,
+            'genre_id' => $request->genre_id,
             'file_path' => $path,
             'user_id' => auth()->id(),
             'is_public' => $request->is_public ?? true,

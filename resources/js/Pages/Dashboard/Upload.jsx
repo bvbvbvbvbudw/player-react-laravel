@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Head, useForm } from '@inertiajs/react';
 
-export default function Upload() {
+export default function Upload({ genres }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         title: '',
         artist: '',
-        genre: '',
+        genre_id: '', // теперь genre_id
         audio: null,
         is_public: true,
     });
@@ -49,13 +49,19 @@ export default function Upload() {
 
                     <div>
                         <label className="block mb-1 font-semibold">Жанр</label>
-                        <input
-                            type="text"
-                            value={data.genre}
-                            onChange={(e) => setData('genre', e.target.value)}
+                        <select
+                            value={data.genre_id}
+                            onChange={(e) => setData('genre_id', e.target.value)}
                             className="w-full border px-3 py-2 rounded"
-                        />
-                        {errors.genre && <p className="text-red-600 text-sm">{errors.genre}</p>}
+                        >
+                            <option value="">Выберите жанр</option>
+                            {genres.map((genre) => (
+                                <option key={genre.id} value={genre.id}>
+                                    {genre.name}
+                                </option>
+                            ))}
+                        </select>
+                        {errors.genre_id && <p className="text-red-600 text-sm">{errors.genre_id}</p>}
                     </div>
 
                     <div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Genre;
 use Illuminate\Http\Request;
 
 class AdminPageController extends Controller
@@ -13,7 +14,7 @@ class AdminPageController extends Controller
 
     public function genre()
     {
-        $test = false;
-        return view("admin.genre", compact("test"));
+        $genres = Genre::all();
+        return view("admin.genre", compact("genres"));
     }
 }

@@ -26,4 +26,9 @@ class Track extends Model
     {
         return $this->morphMany(Like::class, 'likeable');
     }
+
+    public function genre()
+    {
+        return $this->belongsTo(Genre::class);
+    }
 }

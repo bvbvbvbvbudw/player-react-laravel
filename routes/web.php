@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminPageController;
+use App\Http\Controllers\GenreController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\ProfileController;
@@ -38,6 +39,8 @@ Route::post('/playlists/{playlist}/add-track', [PlaylistController::class, 'addT
 // ROUTES ADMIN
 Route::get("/admin", [AdminPageController::class, "index"])->name("admin.index");
 Route::get("/admin/genre", [AdminPageController::class, "genre"])->name("admin.genre");
+Route::get("/admin/genre/create", [GenreController::class, "create"])->name("admin.genre.create");
+Route::post("/admin/genre/create/store", [GenreController::class, "store"])->name("admin.genre.store");
 // END ROUTES ADMIN
 
 
