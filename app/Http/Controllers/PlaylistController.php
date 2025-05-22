@@ -52,6 +52,11 @@ class PlaylistController extends Controller
         return Inertia::render('Playlists/Create');
     }
 
+    public function adminCreate()
+    {
+        return view("admin.playlist_create");
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([

@@ -38,11 +38,29 @@ Route::post('/playlists/{playlist}/add-track', [PlaylistController::class, 'addT
 
 // ROUTES ADMIN
 Route::get("/admin", [AdminPageController::class, "index"])->name("admin.index");
+
 Route::get("/admin/genre", [AdminPageController::class, "genre"])->name("admin.genre");
+
+Route::get("/admin/track", [AdminPageController::class, "track"])->name("admin.track");
+
+Route::get("/admin/playlist", [AdminPageController::class, "playlist"])->name("admin.playlist");
+
+Route::get("/admin/users", [AdminPageController::class, "users"])->name("admin.users");
+Route::put('/admin/users/{user}', [AdminPageController::class, 'updateUser'])->name('admin.users.update');
+Route::get('/admin/users/{user}/edit', [AdminPageController::class, 'editUser'])->name('admin.users.edit');
+Route::delete('admin/users/{user}', [AdminPageController::class, 'destroyUser'])->name('admin.users.destroy');
+
 Route::get("/admin/download", [AdminPageController::class, "download"])->name("admin.download.index");
 Route::post("/admin/download/python", [AdminPageController::class, "python"])->name("admin.download.python");
+
 Route::get("/admin/genre/create", [GenreController::class, "create"])->name("admin.genre.create");
 Route::post("/admin/genre/create/store", [GenreController::class, "store"])->name("admin.genre.store");
+
+Route::get("/admin/track/create", [AdminPageController::class, "adminCreate"])->name("admin.track.create");
+Route::get("/admin/track/create/store", [AdminPageController::class, "store"])->name("admin.track.store");
+
+Route::get("/admin/playlist/create", [PlaylistController::class, "adminCreate"])->name("admin.playlist.create");
+Route::get("/admin/playlist/create/store", [PlaylistController::class, "store"])->name("admin.playlist.store");
 // END ROUTES ADMIN
 
 

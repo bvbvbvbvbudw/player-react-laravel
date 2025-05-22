@@ -16,9 +16,9 @@
         <ul class="space-y-4">
             <li><a href="{{ route('admin.index') }}" class="block py-2 px-3 rounded hover:bg-green-100 font-semibold @if(request()->routeIs('admin.index')) bg-green-200 @endif">Панель</a></li>
             <li><a href="{{ route('admin.genre') }}" class="block py-2 px-3 rounded hover:bg-green-100 font-semibold @if(request()->routeIs('admin.genre')) bg-green-200 @endif">Жанры</a></li>
-            <li><a href="{{ route('admin.index') }}" class="block py-2 px-3 rounded hover:bg-green-100 font-semibold @if(request()->routeIs('admin.index')) bg-green-200 @endif">Треки</a></li>
-            <li><a href="{{ route('admin.index') }}" class="block py-2 px-3 rounded hover:bg-green-100 font-semibold @if(request()->routeIs('admin.index')) bg-green-200 @endif">Плейлисты</a></li>
-            <li><a href="{{ route('admin.index') }}" class="block py-2 px-3 rounded hover:bg-green-100 font-semibold @if(request()->routeIs('admin.index')) bg-green-200 @endif">Пользователи</a></li>
+            <li><a href="{{ route('admin.track') }}" class="block py-2 px-3 rounded hover:bg-green-100 font-semibold @if(request()->routeIs('admin.track')) bg-green-200 @endif">Треки</a></li>
+            <li><a href="{{ route('admin.playlist') }}" class="block py-2 px-3 rounded hover:bg-green-100 font-semibold @if(request()->routeIs('admin.playlist')) bg-green-200 @endif">Плейлисты</a></li>
+            <li><a href="{{ route('admin.users') }}" class="block py-2 px-3 rounded hover:bg-green-100 font-semibold @if(request()->routeIs('admin.users')) bg-green-200 @endif">Пользователи</a></li>
             <li><a href="{{ route('admin.download.index') }}" class="block py-2 px-3 rounded hover:bg-green-100 font-semibold @if(request()->routeIs('admin.download.index')) bg-green-200 @endif">Подключить с других сервисов</a></li>
         </ul>
     </nav>

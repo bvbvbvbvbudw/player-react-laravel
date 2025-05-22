@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DownloadMusicJob;
 use App\Jobs\ProcessPlaylistDownload;
 use App\Models\Genre;
+use App\Models\Playlist;
 use App\Models\Track;
+use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -28,6 +33,7 @@ class AdminPageController extends Controller
         return view("admin.another_service");
     }
 
+
     public function python(Request $request)
     {
         $validated = $request->validate([
@@ -37,49 +43,67 @@ class AdminPageController extends Controller
             'artist' => 'nullable|string',
         ]);
 
-        $type = $validated['type'];
-        $service = $validated["service"];
-        $title = $validated['title'];
-        $artist = $validated['artist'] ?? '';
+        DownloadMusicJob::dispatch(
+            $validated['service'],
+            $validated['type'],
+            $validated['title'],
+            $validated['artist'] ?? null,
+            auth()->id()
+        );
 
-        $pythonScript = base_path('app\Service\music_downloader\main.py');
+        return redirect()->route('admin.download.index')->with('success', 'Задача отправлена в очередь. Музыка скоро появится.');
+    }
 
-        $args = [$service, $type, $title];
-        if ($artist) $args[] = $artist;
-        $python_path = "C:\\Users\\dsada\\AppData\\Local\\Programs\\Python\\Python313\\python.EXE";
-        $env = array_merge($_ENV, $_SERVER, ['SystemRoot' => getenv('SystemRoot')]);
+    public function track()
+    {
+        $tracks = Track::all();
+        return view("admin.track", compact("tracks"));
+    }
+    public function playlist()
+    {
+        $playlists = Playlist::with("tracks", "user", "likes")->get();
+        return view("admin.playlist", compact("playlists", ));
+    }
 
-        $process = new Process(array_merge([$python_path, $pythonScript], $args), base_path(), $env);
-        $process->setWorkingDirectory(base_path());
-        $process->run();
+    public function users()
+    {
+        $users = User::orderBy('created_at', 'desc')->paginate(15);
 
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+        return view('admin.user', [
+            'users' => $users,
+        ]);
+    }
+
+    public function editUser(User $user)
+    {
+        return view('admin.user_edit', compact('user'));
+    }
+
+    public function updateUser(Request $request, User $user)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|max:255',
+            'is_admin' => 'nullable|boolean',
+        ]);
+
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+
+        if (!empty($data['password'])) {
+            $user->password = Hash::make($data['password']);
         }
 
-        $outputRaw = $process->getOutput();
-        Log::info($process->getOutput());
+        $user->is_admin = $request->has('is_admin') ? 1 : 0;
+        $user->save();
 
-        $lines = explode("\n", trim($outputRaw));
-        $lastLine = trim(end($lines));
-        $output = json_decode($lastLine, true);
+        return redirect()->route('admin.user')->with('success', 'Пользователь успешно обновлён');
+    }
 
-        if ($type === 'track') {
-            $relativePath = str_replace('storage\\app\\public\\', '', $output['path']);
-            Track::create([
-                'title' => $output['title'],
-                'artist' => $output['artist'],
-                'file_path' => $relativePath,
-                'user_id' => auth()->id() ?? null,
-                'is_public' => true,
-                'genre_id' => null,
-                'plays' => 0,
-                'likes' => 0,
-            ]);
-        } elseif ($type === 'playlist') {
-            // TODO: добавить инпут колво треков которые парсить в плейлист
-            ProcessPlaylistDownload::dispatch($output['tracks'], $output['title'] ?? "Unknown", auth()->id() ?? null);
-        }
-        return redirect()->route('admin.download.index')->with('success', 'Музыка скачана');
+    public function destroyUser(User $user)
+    {
+        $user->delete();
+        return redirect()->route('admin.user')->with('success', 'Пользователь успешно удалён');
     }
 }

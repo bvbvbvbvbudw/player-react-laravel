@@ -26,6 +26,12 @@ class TrackController extends Controller
         ]);
     }
 
+    public function adminCreate()
+    {
+        $genres = Genre::all();
+        return view("admin.track_create", compact("genres"));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
